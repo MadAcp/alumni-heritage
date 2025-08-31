@@ -1,0 +1,196 @@
+{
+  "users": [
+    {
+      "id": "U001",
+      "email": "john.doe@alumni.edu",
+      "password": "password123",
+      "profile": {
+        "personalInfo": {
+          "firstName": "John",
+          "lastName": "Doe",
+          "middleName": "Michael",
+          "dateOfBirth": "1985-03-15",
+          "gender": "Male",
+          "nationality": "American",
+          "contactInfo": {
+            "email": "john.doe@alumni.edu",
+            "phone": "+1-555-0123",
+            "address": {
+              "street": "123 Alumni Drive",
+              "city": "Springfield",
+              "state": "IL",
+              "zipCode": "62701",
+              "country": "USA"
+            }
+          }
+        },
+        "academicInfo": {
+          "studentId": "STU2003001",
+          "degree": "Bachelor of Science",
+          "major": "Computer Science",
+          "minor": "Mathematics",
+          "graduationYear": 2007,
+          "gpa": "3.85",
+          "honors": "Magna Cum Laude",
+          "thesis": "Machine Learning Applications in Data Analysis",
+          "academicAwards": [
+            "Dean's List (2004-2007)",
+            "Computer Science Department Award",
+            "Mathematics Excellence Award"
+          ]
+        },
+        "professionalInfo": {
+          "currentPosition": "Senior Software Engineer",
+          "currentCompany": "TechCorp Solutions",
+          "industry": "Technology",
+          "yearsOfExperience": 16,
+          "skills": [
+            "JavaScript",
+            "Python",
+            "React",
+            "Node.js",
+            "Machine Learning",
+            "Data Analysis"
+          ],
+          "certifications": [
+            "AWS Certified Solutions Architect",
+            "Google Cloud Professional Developer",
+            "Certified Scrum Master"
+          ]
+        },
+        "alumniActivities": {
+          "membershipLevel": "Gold Member",
+          "donationHistory": [
+            {
+              "year": 2022,
+              "amount": 1000,
+              "purpose": "Computer Science Department Fund"
+            },
+            {
+              "year": 2021,
+              "amount": 500,
+              "purpose": "General Alumni Fund"
+            }
+          ],
+          "volunteerWork": [
+            "Mentoring Program (2018-2022)",
+            "Career Fair Organizer (2019)",
+            "Alumni Reunion Committee (2020)"
+          ],
+          "eventsAttended": [
+            "Homecoming 2022",
+            "Alumni Networking Night 2021",
+            "Department Reunion 2020"
+          ]
+        },
+        "achievements": {
+          "professional": [
+            "Employee of the Year 2021",
+            "Innovation Award 2019",
+            "Leadership Excellence 2018"
+          ],
+          "community": [
+            "Volunteer of the Year 2020",
+            "Community Service Award 2019"
+          ]
+        }
+      }
+    },
+    {
+      "id": "U002",
+      "email": "sarah.smith@alumni.edu",
+      "password": "password123",
+      "profile": {
+        "personalInfo": {
+          "firstName": "Sarah",
+          "lastName": "Smith",
+          "middleName": "Elizabeth",
+          "dateOfBirth": "1988-07-22",
+          "gender": "Female",
+          "nationality": "American",
+          "contactInfo": {
+            "email": "sarah.smith@alumni.edu",
+            "phone": "+1-555-0456",
+            "address": {
+              "street": "456 Heritage Lane",
+              "city": "Riverside",
+              "state": "CA",
+              "zipCode": "92501",
+              "country": "USA"
+            }
+          }
+        },
+        "academicInfo": {
+          "studentId": "STU2006002",
+          "degree": "Master of Business Administration",
+          "major": "Business Administration",
+          "minor": "Finance",
+          "graduationYear": 2010,
+          "gpa": "3.92",
+          "honors": "Summa Cum Laude",
+          "thesis": "Strategic Management in Digital Transformation",
+          "academicAwards": [
+            "Graduate Student Excellence Award",
+            "Business School Fellowship",
+            "Finance Department Recognition"
+          ]
+        },
+        "professionalInfo": {
+          "currentPosition": "Vice President of Operations",
+          "currentCompany": "Global Enterprises Inc.",
+          "industry": "Manufacturing",
+          "yearsOfExperience": 13,
+          "skills": [
+            "Strategic Planning",
+            "Operations Management",
+            "Financial Analysis",
+            "Team Leadership",
+            "Process Improvement",
+            "Supply Chain Management"
+          ],
+          "certifications": [
+            "PMP - Project Management Professional",
+            "Six Sigma Black Belt",
+            "Lean Manufacturing Specialist"
+          ]
+        },
+        "alumniActivities": {
+          "membershipLevel": "Platinum Member",
+          "donationHistory": [
+            {
+              "year": 2022,
+              "amount": 2500,
+              "purpose": "Business School Endowment"
+            },
+            {
+              "year": 2021,
+              "amount": 1500,
+              "purpose": "Student Scholarship Fund"
+            }
+          ],
+          "volunteerWork": [
+            "Business School Advisory Board (2019-2022)",
+            "Career Development Workshop Leader (2020-2022)",
+            "Alumni Association Board Member (2021-2022)"
+          ],
+          "eventsAttended": [
+            "Business School Summit 2022",
+            "Alumni Leadership Conference 2021",
+            "Homecoming 2020"
+          ]
+        },
+        "achievements": {
+          "professional": [
+            "Top 40 Under 40 Business Leaders 2022",
+            "Excellence in Operations Award 2021",
+            "Leadership Achievement Award 2020"
+          ],
+          "community": [
+            "Community Leadership Award 2021",
+            "Women in Business Recognition 2020"
+          ]
+        }
+      }
+    }
+  ]
+}
