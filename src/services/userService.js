@@ -258,10 +258,64 @@ class UserService {
 
   // Add new user
   async createUser(userData) {
+    const updatedUserSchema = {
+      "email": userData.email,
+      "password": userData.password,
+      "profile": {
+        "personalInfo": {
+          "firstName": userData.firstName,
+          "middleName": "",
+          "lastName": userData.lastName,
+          "dateOfBirth": userData.dateOfBirth,
+          "gender": userData.gender,
+          "nationality": "",
+          "contactInfo": {
+            "email": userData.email,
+            "phone": "",
+            "address": {
+              "street": "",
+              "city": "",
+              "state": "",
+              "zipCode": "",
+              "country": ""
+            }
+          }
+        },
+        "academicInfo": {
+          "studentId": "",
+          "degree": "",
+          "major": "",
+          "minor": "",
+          "graduationYear": 0,
+          "gpa": "",
+          "honors": "",
+          "thesis": "",
+          "academicAwards": []
+        },
+        "professionalInfo": {
+          "currentPosition": "",
+          "currentCompany": "",
+          "industry": "",
+          "yearsOfExperience": 0,
+          "skills": [],
+          "certifications": []
+        },
+        "alumniActivities": {
+          "membershipLevel": "",
+          "donationHistory": [],
+          "volunteerWork": [],
+          "eventsAttended": []
+        },
+        "achievements": {
+          "professional": [],
+          "community": []
+        }
+      }
+    };
     if (USE_LOCAL_STORAGE) {
-      return this.createUserInLocalStorage(userData);
+      return this.createUserInLocalStorage(updatedUserSchema);
     } else {
-      return this.createUserInAPI(userData);
+      return this.createUserInAPI(updatedUserSchema);
     }
   }
 
