@@ -1,5 +1,6 @@
 {
   "name": "alumni-heritage-site",
+  "homepage": "/alumni",
   "version": "1.0.0",
   "description": "Professional alumni and heritage site for educational institutions",
   "main": "index.js",

@@ -3,12 +3,6 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const HeaderContainer = styled.header`
-  // position: absolute;
-  // top: 0;
-  // left: 0;
-  // width: 100%;
-  // z-index: 100;
-  // background: transparent;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-bottom: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);

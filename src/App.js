@@ -14,7 +14,6 @@ import ScrollToTop from './components/ScrollToTop';
 
 const AppContainer = styled.div`
   min-height: 100vh;
-  // background-color: #f8fafc;
   font-family: 'Inter', sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 `;
@@ -29,8 +28,6 @@ function AppRoutes() {
 
   return (
     <AppContainer>
-      {/* {isAuthenticated && <UserHeader />}
-      {!isAuthenticated && <Header />} */}
       {isAuthenticated ? <UserHeader /> : <Header />}
       <Routes>
         <Route path="/" element={<Welcome />} />
@@ -60,7 +57,6 @@ function AppRoutes() {
             </ProtectedRoute>
           } 
         />
-        <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
       </Routes>
     </AppContainer>
   );
@@ -69,10 +65,8 @@ function AppRoutes() {
 function App() {
   return (
     <AuthProvider>
-      <Router>
         <ScrollToTop />
         <AppRoutes />
-      </Router>
     </AuthProvider>
   );
 }

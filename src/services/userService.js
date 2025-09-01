@@ -207,7 +207,7 @@ class UserService {
         console.error('Error initializing localStorage:', error);
       }
     } else {
-      //console.log('Users data already exists in localStorage');
+      console.log('Users data already exists in localStorage');
     }
   }
 
@@ -862,17 +862,6 @@ class UserService {
       return null;
     }
   }
-
-  // Debug method to check localStorage state
-  // debugLocalStorage() {
-  //   console.log('=== localStorage Debug Info ===');
-  //   console.log('All localStorage keys:', Object.keys(localStorage));
-  //   console.log('USERS_STORAGE_KEY:', USERS_STORAGE_KEY);
-  //   console.log('CURRENT_USER_KEY:', CURRENT_USER_KEY);
-  //   console.log('Users data:', localStorage.getItem(USERS_STORAGE_KEY));
-  //   console.log('Current user:', localStorage.getItem(CURRENT_USER_KEY));
-  //   console.log('=============================');
-  // }
 }
 
 // Create and export a single instance
