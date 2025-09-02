@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 const DashboardContainer = styled.div`
   max-width: 1200px;
@@ -155,7 +155,7 @@ const ActivityItem = styled.div`
   }
 `;
 
-function Dashboard() {
+function UserDashboard() {
   const { currentUser } = useAuth();
   const profile = currentUser?.profile;
 
@@ -242,4 +242,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default UserDashboard;

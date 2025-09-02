@@ -57,7 +57,7 @@ class FirebaseService {
             if (!querySnapshot.empty) {
                 const userDoc = querySnapshot.docs[0];
                 const user = { id: userDoc.id, ...userDoc.data() };
-                return { success: true, user };
+                return { success: true, data: user };
             } else {
                 return { success: false, message: 'User not found' };
             }
@@ -116,9 +116,9 @@ class FirebaseService {
         try {
             const response = await this.getFirebaseUserByEmail(email);
             if (response.success) {
-                const user = response.user;
+                const user = response.data;
                 const isMatch = await bcrypt.compare(password, user.password);
-                if (isMatch) return { success: true, user };
+                if (isMatch) return { success: true, data: user };
             }
             return { success: false, message: 'Invalid credentials' };
         } catch (error) {
@@ -144,6 +144,7 @@ class FirebaseService {
                 {
                     id: 'U001',
                     email: 'john.doe@alumni.edu',
+                    role: 'alumni',
                     password: hashedPassword,
                     profile: {
                         personalInfo: {
@@ -232,6 +233,7 @@ class FirebaseService {
                 {
                     "id": "U002",
                     "email": "sarah.smith@alumni.edu",
+                    "role": "alumni",
                     "password": hashedPassword,
                     "profile": {
                         "personalInfo": {
@@ -322,6 +324,7 @@ class FirebaseService {
                 {
                     "id": "U003",
                     "email": "avadhutcpatil@gmail.com",
+                    "role": "admin",
                     "password": hashedPassword,
                     "profile": {
                         "alumniActivities": {

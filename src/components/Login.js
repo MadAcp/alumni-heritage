@@ -121,8 +121,26 @@ const DemoCredentials = styled.div`
   p {
     margin: 0.25rem 0;
     color: #64748b;
-    font-size: 0.8rem;
-    font-family: monospace;
+  }
+`;
+
+const CredentialGroup = styled.div`
+  margin-top: 0.75rem;
+  text-align: left;
+
+  &:not(:first-of-type) {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 0.75rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+    code {
+      background: #eef2ff;
+      color: #4338ca;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
   }
 `;
 
@@ -162,8 +180,15 @@ function Login() {
       const result = await userService.authenticateUser(email, password);
 
       if (result.success) {
-        login(result.user);
-        navigate('/dashboard');
+        const user = result.data; // Use result.data as per the firebaseService change
+        login(user); // Pass the full user object to the auth context
+
+        // Redirect based on user role
+        if (user.role === 'admin') {
+          navigate('/admin-dashboard');
+        } else {
+          navigate('/user-dashboard');
+        }
       } else {
         setError(result.message || 'Invalid email or password. Please try again.');
       }
@@ -219,11 +244,22 @@ function Login() {
         </SignUpLink>
 
         <DemoCredentials>
-          <h4>Demo Credentials:</h4>
-          <p>Email: john.doe@alumni.edu</p>
-          <p>Password: password123</p>
-          <p>Email: sarah.smith@alumni.edu</p>
-          <p>Password: password123</p>
+          <h4>Demo Credentials</h4>
+          <CredentialGroup>
+            <p><b>Role:</b> Alumni</p>
+            <p><b>Email:</b> <code>john.doe@alumni.edu</code></p>
+            <p><b>Password:</b> <code>password123</code></p>
+          </CredentialGroup>
+          <CredentialGroup>
+            <p><b>Role:</b> Alumni</p>
+            <p><b>Email:</b> <code>sarah.smith@alumni.edu</code></p>
+            <p><b>Password:</b> <code>password123</code></p>
+          </CredentialGroup>
+          <CredentialGroup>
+            <p><b>Role:</b> Admin</p>
+            <p><b>Email:</b> <code>avadhutcpatil@gmail.com</code></p>
+            <p><b>Password:</b> <code>password123</code></p>
+          </CredentialGroup>
         </DemoCredentials>
       </LoginCard>
     </LoginContainer>

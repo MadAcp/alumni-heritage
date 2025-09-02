@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Login from './components/Login';
-import Dashboard from './components/Dashboard';
-import Profile from './components/Profile';
-import ProfileEdit from './components/ProfileEdit';
-import UserHeader from './components/UserHeader';
+import UserDashboard from './components/user/UserDashboard';
+import AdminDashboard from './components/admin/AdminDashboard';
+import Profile from './components/user/Profile';
+import ProfileEdit from './components/user/ProfileEdit';
+import UserHeader from './components/user/UserHeader';
+import AdminHeader from './components/admin/AdminHeader';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Welcome from './components/Welcome';
 import SignUp from './components/SignUp';
@@ -23,21 +25,42 @@ const ProtectedRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
+// A protected route specifically for admin users
+const AdminRoute = ({ children }) => {
+  const { isAuthenticated, currentUser } = useAuth();
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+  // If authenticated but not an admin, redirect to the user dashboard
+  return currentUser?.role === 'admin' ? children : <Navigate to="/user-dashboard" />;
+};
+
 function AppRoutes() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, currentUser } = useAuth();
+
+  const renderHeader = () => {
+    if (!isAuthenticated) {
+      return <Header />;
+    }
+    return currentUser?.role === 'admin' ? <AdminHeader /> : <UserHeader />;
+  };
+
+  const defaultAuthenticatedPath = currentUser?.role === 'admin' ? '/admin-dashboard' : '/user-dashboard';
 
   return (
     <AppContainer>
-      {isAuthenticated ? <UserHeader /> : <Header />}
+      {renderHeader()}
       <Routes>
         <Route path="/" element={<Welcome />} />
-        <Route path="/signup" element={!isAuthenticated ? <SignUp /> : <Navigate to="/dashboard" />} />
-        <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />} />
+        <Route path="/signup" element={!isAuthenticated ? <SignUp /> : <Navigate to={defaultAuthenticatedPath} />} />
+        <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to={defaultAuthenticatedPath} />} />
+        
+        {/* Alumni Routes */}
         <Route 
-          path="/dashboard" 
+          path="/user-dashboard" 
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <UserDashboard />
             </ProtectedRoute>
           } 
         />
@@ -56,6 +79,16 @@ function AppRoutes() {
               <ProfileEdit />
             </ProtectedRoute>
           } 
+        />
+
+        {/* Admin Routes */}
+        <Route 
+          path="/admin-dashboard"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
         />
       </Routes>
     </AppContainer>

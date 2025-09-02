@@ -42,9 +42,10 @@ class UserService {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(userData.password, salt);
 
-    const updatedUserSchema = {
+    const updatedNewUserSchema = {
       "email": userData.email,
       "password": hashedPassword,
+      "role": "alumni",
       "profile": {
         "personalInfo": {
           "firstName": userData.firstName,
@@ -101,7 +102,7 @@ class UserService {
     const newId = await firebaseService.generateUserId();
     const newUser = {
       id: newId,
-      ...updatedUserSchema
+      ...updatedNewUserSchema
     };
     const firebaseResult = firebaseService.createFirebaseUser(newUser);
     firebaseResult["user"] = newUser;

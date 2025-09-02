@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 const HeaderContainer = styled.header`
   background: white;
@@ -109,7 +109,7 @@ function UserHeader() {
         </Logo>
         
         <Navigation>
-          <NavLink to="/dashboard" className={window.location.pathname === '/dashboard' ? 'active' : ''}>
+          <NavLink to="/user-dashboard" className={window.location.pathname === '/user-dashboard' ? 'active' : ''}>
             Dashboard
           </NavLink>
           <NavLink to="/profile" className={window.location.pathname === '/profile' ? 'active' : ''}>
