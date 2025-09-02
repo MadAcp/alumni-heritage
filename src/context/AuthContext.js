@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }) => {
     // The user data is already saved to localStorage in the Login component
     // before this function is called. We just need to update the state here.
     setCurrentUser(userData);
+    userService.setCurrentUser(userData);
   };
 
   const logout = () => {

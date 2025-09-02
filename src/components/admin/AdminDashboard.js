@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useAuth } from '../../context/AuthContext';
+import { Link } from 'react-router-dom'; // Import Link
+import { useAuth } from '../../context/AuthContext'; 
 import { FaUsers, FaRegNewspaper, FaDollarSign, FaChartBar } from 'react-icons/fa';
 
 const DashboardContainer = styled.div`
@@ -92,22 +93,27 @@ const QuickLinkCard = styled.div`
     margin-bottom: 1.5rem;
   }
 
-  button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
+`;
+
+// Reusable styled component for buttons/links within QuickLinkCard
+const QuickLinkButton = styled.button`
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none; /* Important for Link component */
+  display: inline-block; /* Important for Link component */
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
   }
+
 `;
 
 function AdminDashboard() {
@@ -145,17 +151,17 @@ function AdminDashboard() {
         <QuickLinkCard>
           <h3>Manage Users</h3>
           <p>View, edit, or remove alumni profiles from the system.</p>
-          <button>Go to User Management</button>
+          <QuickLinkButton as={Link} to="/admin/users">Go to User Management</QuickLinkButton>
         </QuickLinkCard>
         <QuickLinkCard>
           <h3>Content Moderation</h3>
           <p>Review and approve user-generated content like posts and comments.</p>
-          <button>Review Content</button>
+          <QuickLinkButton>Review Content</QuickLinkButton>
         </QuickLinkCard>
         <QuickLinkCard>
           <h3>Analytics & Reports</h3>
           <p>Generate reports on user engagement, donations, and site traffic.</p>
-          <button>View Analytics</button>
+          <QuickLinkButton>View Analytics</QuickLinkButton>
         </QuickLinkCard>
       </QuickLinksGrid>
     </DashboardContainer>

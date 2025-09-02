@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import styled from 'styled-components';
+import Welcome from './components/Welcome';
+import Header from './components/Header';
 import Login from './components/Login';
+import SignUp from './components/SignUp';
+import ScrollToTop from './components/ScrollToTop';
+import NotFound from './components/NotFound';
 import UserDashboard from './components/user/UserDashboard';
-import AdminDashboard from './components/admin/AdminDashboard';
 import Profile from './components/user/Profile';
 import ProfileEdit from './components/user/ProfileEdit';
 import UserHeader from './components/user/UserHeader';
 import AdminHeader from './components/admin/AdminHeader';
+import AdminDashboard from './components/admin/AdminDashboard';
+import ManageUsers from './components/admin/ManageUsers';
+import ManageEvents from './components/admin/ManageEvents';
+import Settings from './components/admin/Settings'
 import { AuthProvider, useAuth } from './context/AuthContext';
-import Welcome from './components/Welcome';
-import SignUp from './components/SignUp';
-import Header from './components/Header';
-import ScrollToTop from './components/ScrollToTop';
 
 const AppContainer = styled.div`
   min-height: 100vh;
@@ -90,6 +94,33 @@ function AppRoutes() {
             </AdminRoute>
           }
         />
+        <Route 
+          path="/admin/users"
+          element={
+            <AdminRoute>
+              <ManageUsers />
+            </AdminRoute>
+          }
+        />
+        <Route 
+          path="/admin/events"
+          element={
+            <AdminRoute>
+              <ManageEvents />
+            </AdminRoute>
+          }
+        />
+        <Route 
+          path="/admin/settings"
+          element={
+            <AdminRoute>
+              <Settings />
+            </AdminRoute>
+          }
+        />
+
+        {/* Catch-all 404 Route */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </AppContainer>
   );

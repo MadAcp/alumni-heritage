@@ -114,7 +114,7 @@ class UserService {
   getCurrentUser() {
     try {
       const currentUser = localStorage.getItem(CURRENT_USER_KEY);
-      return currentUser ? JSON.parse(currentUser) : null;
+      return (currentUser && currentUser !== 'undefined') ? JSON.parse(currentUser) : null;
     } catch (error) {
       console.error('Error getting current user:', error);
       return null;
