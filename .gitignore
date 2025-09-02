@@ -78,6 +78,12 @@ web_modules/
 build
 build/
 
+# Environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
 # Next.js build output
 .next
 out
