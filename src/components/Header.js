@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const HeaderContainer = styled.header`
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-bottom: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 `;
 
@@ -31,9 +30,35 @@ const Logo = styled(Link)`
 `;
 
 const Navigation = styled.nav`
+  /* Mobile: Slide-in Drawer */
   display: flex;
-  gap: 1rem;
-  align-items: center;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-start;
+  background: linear-gradient(150deg, #6066d8 0%, #6b4092 100%);
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 280px;
+  padding: 6rem 2rem 2rem;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+  transform: ${props => props.isOpen ? 'translateX(0)' : 'translateX(100%)'};
+  transition: transform 0.3s ease-in-out;
+  z-index: 100;
+
+  /* Desktop styles */
+  @media (min-width: 768px) {
+    position: static;
+    flex-direction: row;
+    gap: 1rem;
+    width: auto;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    height: auto;
+    transform: none;
+  }
 `;
 
 const NavButton = styled(Link)`
@@ -64,15 +89,75 @@ const NavButton = styled(Link)`
   }
 `;
 
+const HamburgerButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 110; /* Must be higher than the navigation drawer */
+  color: white;
+
+  /* Hide on desktop */
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99; /* Below the nav, above the content */
+  opacity: ${props => props.isOpen ? '1' : '0'};
+  visibility: ${props => props.isOpen ? 'visible' : 'hidden'};
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
 function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Effect to lock body scroll when menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    // Cleanup function to reset style if component unmounts
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMenuOpen]);
+
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
     <HeaderContainer>
       <HeaderContent>
         <Logo to="/">Alumni Heritage</Logo>
-        <Navigation>
-          <NavButton to="/login" className="signin">Sign In</NavButton>
-          <NavButton to="/signup" className="signup">Sign Up</NavButton>
+        <HamburgerButton
+          onClick={() => setIsMenuOpen(prev => !prev)}
+          aria-label="Toggle navigation menu"
+          aria-expanded={isMenuOpen}
+        >
+          {isMenuOpen ? (
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          ) : (
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          )}
+        </HamburgerButton>
+        <Navigation isOpen={isMenuOpen}>
+          <NavButton to="/login" className="signin" onClick={closeMenu}>Sign In</NavButton>
+          <NavButton to="/signup" className="signup" onClick={closeMenu}>Sign Up</NavButton>
         </Navigation>
+        <Overlay isOpen={isMenuOpen} onClick={closeMenu} />
       </HeaderContent>
     </HeaderContainer>
   );
