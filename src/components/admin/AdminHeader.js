@@ -222,8 +222,9 @@ function AdminHeader() {
         <MenuContainer isOpen={isMenuOpen}>
           <Nav>
             <NavLink to="/admin-dashboard" onClick={closeMenu}>Dashboard</NavLink>
-            <NavLink to="/admin/users" onClick={closeMenu}>Manage Users</NavLink>
-            <NavLink to="/admin/events" onClick={closeMenu}>Manage Events</NavLink>
+            <NavLink to="/admin/users" onClick={closeMenu}>Alumni Users</NavLink>
+            <NavLink to="/admin/departments" onClick={closeMenu}>Departments</NavLink>
+            <NavLink to="/admin/events" onClick={closeMenu}>Events</NavLink>
             <NavLink to="/admin/settings" onClick={closeMenu}>Settings</NavLink>
           </Nav>
           <UserMenu>
