@@ -70,6 +70,40 @@ const ProfileMeta = styled.div`
   }
 `;
 
+const StatusBadge = styled.span`
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: capitalize;
+  display: inline-block;
+
+  ${({ status }) => {
+    switch (status) {
+      case 'active':
+        return `
+          background-color: #dcfce7;
+          color: #166534;
+        `;
+      case 'pending':
+        return `
+          background-color: #fef9c3;
+          color: #854d0e;
+        `;
+      case 'suspended':
+        return `
+          background-color: #fee2e2;
+          color: #991b1b;
+        `;
+      default:
+        return `
+          background-color: #e5e7eb;
+          color: #4b5563;
+        `;
+    }
+  }}
+`;
+
 const EditButton = styled.button`
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -210,7 +244,7 @@ function Profile() {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const profile = currentUser?.profile;
-
+  
   const getInitials = (firstName, lastName) => {
     return `${firstName?.charAt(0) || ''}${lastName?.charAt(0) || ''}`.toUpperCase();
   };
@@ -223,8 +257,8 @@ function Profile() {
     });
   };
 
-  if (!profile) {
-    return <div>Loading profile...</div>;
+  if (!currentUser) {
+    return <ProfileContainer><div>Loading profile...</div></ProfileContainer>;
   }
 
   return (
@@ -241,16 +275,20 @@ function Profile() {
         </ProfileTitle>
         <ProfileMeta>
           <div className="meta-item">
-            <div className="meta-label">Student ID</div>
-            <div className="meta-value">{profile.academicInfo?.studentId}</div>
-          </div>
-          <div className="meta-item">
             <div className="meta-label">Graduation Year</div>
-            <div className="meta-value">{profile.academicInfo?.graduationYear}</div>
+            <div className="meta-value">{profile.academicInfo?.graduationYear || 'N/A'}</div>
           </div>
           <div className="meta-item">
-            <div className="meta-label">Membership Level</div>
-            <div className="meta-value">{profile.alumniActivities?.membershipLevel}</div>
+            <div className="meta-label">Membership</div>
+            <div className="meta-value">{profile.alumniActivities?.membershipLevel || 'N/A'}</div>
+          </div>
+          <div className="meta-item">
+            <div className="meta-label">Status</div>
+            <div className="meta-value">
+              <StatusBadge status={currentUser.status}>
+                {currentUser.status || 'Unknown'}
+              </StatusBadge>
+            </div>
           </div>
         </ProfileMeta>
         
@@ -306,6 +344,14 @@ function Profile() {
         <ProfileSection>
           <h2>Academic Information</h2>
           <InfoGrid>
+            <InfoItem>
+              <div className="info-label">Department</div>
+              <div className="info-value">{currentUser.departmentName || 'N/A'}</div>
+            </InfoItem>
+            <InfoItem>
+              <div className="info-label">Start Year</div>
+              <div className="info-value">{currentUser.startYear || 'N/A'}</div>
+            </InfoItem>
             <InfoItem>
               <div className="info-label">Degree</div>
               <div className="info-value">{profile.academicInfo?.degree}</div>

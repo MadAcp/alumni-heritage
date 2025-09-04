@@ -10,6 +10,7 @@ class UserService {
   async initialize() {
     // Initialize firebase with demo credentials users
     await firebaseService.generateDummyUsers();
+    await firebaseService.generateDummyDepartments();
   }
 
   // Authenticate user
@@ -24,17 +25,22 @@ class UserService {
 
   // Update user profile
   async updateUserProfile(userId, updatedProfile) {
-    // Call to firebaseService to update user profile only in firebase
-    const firebaseResult = firebaseService.updateFirebaseUserField(userId, "profile", updatedProfile)
+    // Call to firebaseService to update user in firebase
+    // Create updated user object
+    const currentUserUpdated = this.getCurrentUser();
+    currentUserUpdated.profile = { ...updatedProfile.profile };
+    currentUserUpdated.departmentId = updatedProfile.departmentId;
+    currentUserUpdated.startYear = updatedProfile.startYear;
+    currentUserUpdated.departmentName = updatedProfile.departmentName;
 
+    const firebaseResult = await firebaseService.updateFirebaseUser(userId, currentUserUpdated);
+    
     // Update current user if it's the same user
-    const currentUser = this.getCurrentUser();
-    if (currentUser && currentUser.id === userId) {
-      currentUser.profile = { ...updatedProfile };
-      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
+    if (currentUserUpdated && currentUserUpdated.id === userId) {
+      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUserUpdated));
     }
     // Return the updated user data
-    return { success: true, user: currentUser };
+    return { success: true, user: currentUserUpdated };
   }
 
   // Add new user
@@ -46,6 +52,10 @@ class UserService {
       "email": userData.email,
       "password": hashedPassword,
       "role": "alumni",
+      "departmentId": userData.departmentId,
+      "departmentName": userData.departmentName,
+      "startYear": userData.startYear,
+      "status": "pending",
       "profile": {
         "personalInfo": {
           "firstName": userData.firstName,

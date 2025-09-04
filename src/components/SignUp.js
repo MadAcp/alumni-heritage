@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import userService from '../services/userService';
+import departmentService from '../services/departmentService';
 
 // Re-using styles from Login for consistency
 const SignUpContainer = styled.div`
@@ -138,10 +139,20 @@ function SignUp() {
     repeatPassword: '',
     dateOfBirth: '',
     gender: '',
+    departmentId: '',
+    startYear: '',
+    otherDepartment: '',
   });
+  const [departments, setDepartments] = useState([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    departmentService.getAllDepartments().then(response => {
+      if (response.success) setDepartments(response.data);
+    });
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -168,9 +179,9 @@ function SignUp() {
     setIsLoading(true);
 
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      const department = departments.find(d => d.id === formData.departmentId);
+      const departmentName = formData.departmentId === 'OTHER' ? formData.otherDepartment : department?.departmentName;
+
       const result = await userService.createUser({
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -178,10 +189,13 @@ function SignUp() {
         password: formData.password,
         dateOfBirth: formData.dateOfBirth,
         gender: formData.gender,
+        departmentId: formData.departmentId,
+        departmentName: departmentName,
+        startYear: formData.startYear,
       });
 
       if (result.success) {
-        alert('Sign up successful! Please log in.');
+        alert('Sign up successful! Your account is now pending admin approval.');
         navigate('/login');
       } else {
         setError(result.message || 'An error occurred during sign up.');
@@ -245,6 +259,29 @@ function SignUp() {
             </FormGroup>
           </NameFields>
           
+          <FormGroup>
+            <label htmlFor="departmentId">Department</label>
+            <select id="departmentId" name="departmentId" value={formData.departmentId} onChange={handleChange} required>
+              <option value="" disabled>Select Department...</option>
+              {departments.map(dept => (
+                <option key={dept.id} value={dept.id}>{dept.departmentName}</option>
+              ))}
+              <option value="OTHER">Other</option>
+            </select>
+          </FormGroup>
+
+          {formData.departmentId === 'OTHER' && (
+            <FormGroup>
+              <label htmlFor="otherDepartment">Please specify your department</label>
+              <input type="text" id="otherDepartment" name="otherDepartment" value={formData.otherDepartment} onChange={handleChange} required />
+            </FormGroup>
+          )}
+
+          <FormGroup>
+            <label htmlFor="startYear">Start Year</label>
+            <input type="number" id="startYear" name="startYear" placeholder="e.g., 2018" value={formData.startYear} onChange={handleChange} required />
+          </FormGroup>
+
           <SignUpButton type="submit" disabled={isLoading}>
             {isLoading ? 'Creating Account...' : 'Sign Up'}
           </SignUpButton>

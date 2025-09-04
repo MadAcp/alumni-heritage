@@ -15,6 +15,7 @@ import { db } from '../config/firebaseConfig';
 import bcrypt from 'bcryptjs';
 
 const USER_COLLECTION = "alumni-users";
+const DEPARTMENT_COLLECTION = "departments";
 
 class FirebaseService {
 
@@ -100,6 +101,25 @@ class FirebaseService {
         }
     }
 
+    // Update user status
+    async updateUserStatus(adminRole, userId, newStatus) {
+        try {
+            if (adminRole !== 'admin') {
+                return { success: false, message: "Permission denied. Admin role required." };
+            }
+            // Validate the new status to prevent arbitrary values
+            if (!['pending', 'active', 'suspended', 'rejected'].includes(newStatus)) {
+                return { success: false, message: "Invalid status value." };
+            }
+            // Re-use the existing field update method
+            await this.updateFirebaseUserField(userId, 'status', newStatus);
+            return { success: true };
+        } catch (error) {
+            console.error('Error updating user status in Firebase:', error);
+            return { success: false, message: error.message };
+        }
+    }
+
     // Delete user from firebase using deleteDoc
     async deleteFirebaseUser(userId) {
         try {
@@ -142,90 +162,106 @@ class FirebaseService {
         try {
             const dummyUsers = [
                 {
-                    id: 'U001',
-                    email: 'john.doe@alumni.edu',
-                    role: 'alumni',
-                    password: hashedPassword,
-                    profile: {
-                        personalInfo: {
-                            firstName: 'John',
-                            lastName: 'Doe',
-                            dateOfBirth: '1985-03-15',
-                            gender: 'Male',
-                            nationality: 'American',
-                            contactInfo: {
-                                email: 'john.doe@alumni.edu',
-                                phone: '+1-555-0123',
-                                address: {
-                                    street: '123 Alumni Drive',
-                                    city: 'Springfield',
-                                    state: 'IL',
-                                    zipCode: '62701',
-                                    country: 'USA'
+                    "id": "U001",
+                    "email": "john.doe@alumni.edu",
+                    "departmentId": "CSCI",
+                    "departmentName": "Computer Science",
+                    "startYear": 2003,
+                    "status": "active",
+                    "role": "alumni",
+                    "password": hashedPassword,
+                    "profile": {
+                        "personalInfo": {
+                            "firstName": "John",
+                            "lastName": "Doe",
+                            "dateOfBirth": "1985-03-15",
+                            "gender": "Male",
+                            "nationality": "American",
+                            "contactInfo": {
+                                "email": "john.doe@alumni.edu",
+                                "phone": "+1-555-0123",
+                                "address": {
+                                    "street": "123 Alumni Drive",
+                                    "city": "Springfield",
+                                    "state": "IL",
+                                    "zipCode": "62701",
+                                    "country": "USA"
                                 }
                             }
                         },
-                        academicInfo: {
-                            degree: 'Bachelor of Science',
-                            major: 'Computer Science',
-                            minor: 'Mathematics',
-                            graduationYear: 2007,
-                            gpa: '3.85',
-                            honors: 'Magna Cum Laude',
-                            thesis: 'Machine Learning Applications in Data Analysis',
-                            academicAwards: [
+                        "academicInfo": {
+                            "degree": "Bachelor of Science",
+                            "major": "Computer Science",
+                            "minor": "Mathematics",
+                            "graduationYear": 2007,
+                            "gpa": "3.85",
+                            "honors": "Magna Cum Laude",
+                            "thesis": "Machine Learning Applications in Data Analysis",
+                            "academicAwards": [
                                 "Dean's List (2004-2007)",
                                 "Computer Science Department Award",
                                 "Mathematics Excellence Award"
                             ]
                         },
-                        professionalInfo: {
-                            currentPosition: 'Senior Software Engineer',
-                            currentCompany: 'TechCorp Solutions',
-                            industry: 'Technology',
-                            yearsOfExperience: 16,
-                            skills: [
-                                'JavaScript',
-                                'Python',
-                                'React',
-                                'Node.js',
-                                'Machine Learning',
-                                'Data Analysis'
+                        "professionalInfo": {
+                            "currentPosition": "Senior Software Engineer",
+                            "currentCompany": "TechCorp Solutions",
+                            "industry": "Technology",
+                            "yearsOfExperience": 16,
+                            "skills": [
+                                "JavaScript",
+                                "Python",
+                                "React",
+                                "Node.js",
+                                "Machine Learning",
+                                "Data Analysis"
                             ],
-                            certifications: [
-                                'AWS Certified Solutions Architect',
-                                'Google Cloud Professional Developer',
-                                'Certified Scrum Master'
+                            "certifications": [
+                                "AWS Certified Solutions Architect",
+                                "Google Cloud Professional Developer",
+                                "Certified Scrum Master"
                             ]
                         },
-                        alumniActivities: {
-                            membershipLevel: 'Gold',
-                            donationHistory: [
-                                { year: 2022, amount: 1000, purpose: 'Scholarship Fund' },
-                                { year: 2021, amount: 500, purpose: 'Library Renovation' },
-                                { year: 2020, amount: 750, purpose: 'Research Grant' }
+                        "alumniActivities": {
+                            "membershipLevel": "Gold",
+                            "donationHistory": [
+                                {
+                                    "year": 2022,
+                                    "amount": 1000,
+                                    "purpose": "Scholarship Fund"
+                                },
+                                {
+                                    "year": 2021,
+                                    "amount": 500,
+                                    "purpose": "Library Renovation"
+                                },
+                                {
+                                    "year": 2020,
+                                    "amount": 750,
+                                    "purpose": "Research Grant"
+                                }
                             ],
-                            volunteerWork: [
-                                'Alumni Mentorship Program',
-                                'Career Fair Organizer',
-                                'Student Interview Panel'
+                            "volunteerWork": [
+                                "Alumni Mentorship Program",
+                                "Career Fair Organizer",
+                                "Student Interview Panel"
                             ],
-                            eventsAttended: [
-                                '2023 Homecoming Celebration',
-                                '2022 Alumni Reunion',
-                                '2021 Virtual Networking Event'
+                            "eventsAttended": [
+                                "2023 Homecoming Celebration",
+                                "2022 Alumni Reunion",
+                                "2021 Virtual Networking Event"
                             ]
                         },
-                        achievements: {
-                            professional: [
-                                'Increased company revenue by 35% through strategic initiatives',
-                                'Led successful merger of three business units',
-                                'Established new international market presence in Asia'
+                        "achievements": {
+                            "professional": [
+                                "Increased company revenue by 35% through strategic initiatives",
+                                "Led successful merger of three business units",
+                                "Established new international market presence in Asia"
                             ],
-                            community: [
-                                'Chair of local business networking group',
-                                'Advisor to startup incubator program',
-                                'Speaker at women in business conferences'
+                            "community": [
+                                "Chair of local business networking group",
+                                "Advisor to startup incubator program",
+                                "Speaker at women in business conferences"
                             ]
                         }
                     }
@@ -233,6 +269,10 @@ class FirebaseService {
                 {
                     "id": "U002",
                     "email": "sarah.smith@alumni.edu",
+                    "departmentId": "BUSI",
+                    "departmentName": "Business Administration",
+                    "startYear": 2008,
+                    "status": "pending",
                     "role": "alumni",
                     "password": hashedPassword,
                     "profile": {
@@ -324,6 +364,10 @@ class FirebaseService {
                 {
                     "id": "U003",
                     "email": "avadhutcpatil@gmail.com",
+                    "departmentId": "CAP",
+                    "departmentName": "Computer Application",
+                    "startYear": 2007,
+                    "status": "active",
                     "role": "admin",
                     "password": hashedPassword,
                     "profile": {
@@ -383,6 +427,101 @@ class FirebaseService {
                             ]
                         }
                     },
+                },
+                {
+                    "id": "U004",
+                    "email": "jane.doe@alumni.edu",
+                    "departmentId": "BUSI",
+                    "departmentName": "Business Administration",
+                    "startYear": 2008,
+                    "status": "suspended",
+                    "role": "alumni",
+                    "password": hashedPassword,
+                    "profile": {
+                        "personalInfo": {
+                            "firstName": "Sarah",
+                            "middleName": "Elizabeth",
+                            "lastName": "Smith",
+                            "dateOfBirth": "1988-07-22",
+                            "gender": "Female",
+                            "nationality": "Canadian",
+                            "contactInfo": {
+                                "email": "sarah.smith@alumni.edu",
+                                "phone": "+1-555-0456",
+                                "address": {
+                                    "street": "456 Oak Avenue",
+                                    "city": "Toronto",
+                                    "state": "ON",
+                                    "zipCode": "M5V 3A8",
+                                    "country": "Canada"
+                                }
+                            }
+                        },
+                        "academicInfo": {
+                            "studentId": "STU002",
+                            "degree": "Master of Business Administration",
+                            "major": "Business Administration",
+                            "minor": "Finance",
+                            "graduationYear": 2010,
+                            "gpa": "3.92",
+                            "honors": "Summa Cum Laude",
+                            "thesis": "Strategic Management in Global Markets",
+                            "academicAwards": [
+                                "Graduate Business Excellence Award",
+                                "Finance Department Scholarship",
+                                "International Business Fellowship"
+                            ]
+                        },
+                        "professionalInfo": {
+                            "currentPosition": "Director of Operations",
+                            "currentCompany": "Global Solutions Ltd.",
+                            "industry": "Consulting",
+                            "yearsOfExperience": 13,
+                            "skills": [
+                                "Strategic Planning",
+                                "Project Management",
+                                "Team Leadership",
+                                "Financial Analysis",
+                                "Process Optimization",
+                                "Stakeholder Management"
+                            ],
+                            "certifications": [
+                                "Project Management Professional (PMP)",
+                                "Certified Business Analysis Professional (CBAP)",
+                                "Six Sigma Black Belt"
+                            ]
+                        },
+                        "alumniActivities": {
+                            "membershipLevel": "Platinum",
+                            "donationHistory": [
+                                { "amount": 1000, "purpose": "Business School Endowment", "year": 2023 },
+                                { "amount": 750, "purpose": "Student Travel Fund", "year": 2022 },
+                                { "amount": 500, "purpose": "Alumni Association", "year": 2021 }
+                            ],
+                            "volunteerWork": [
+                                "Business School Advisory Board",
+                                "Career Development Workshop Leader",
+                                "International Student Mentor"
+                            ],
+                            "eventsAttended": [
+                                "2023 Business Leadership Summit",
+                                "2022 International Alumni Conference",
+                                "2021 Virtual Career Workshop"
+                            ]
+                        },
+                        "achievements": {
+                            "professional": [
+                                "Increased company revenue by 35% through strategic initiatives",
+                                "Led successful merger of three business units",
+                                "Established new international market presence in Asia"
+                            ],
+                            "community": [
+                                "Chair of local business networking group",
+                                "Advisor to startup incubator program",
+                                "Speaker at women in business conferences"
+                            ]
+                        }
+                    }
                 }
             ];
 
@@ -393,6 +532,43 @@ class FirebaseService {
             return { success: true };
         } catch (error) {
             console.error('Error generating dummy users in Firebase:', error);
+            return { success: false, message: error.message };
+        }
+    }
+
+    // Generate dummy departments for testing
+    async generateDummyDepartments() {
+        try {
+            const dummyDepartments = [
+                {
+                    id: 'CSCI',
+                    departmentName: 'Computer Science',
+                    courses: ['Bachelor of Science in Computer Science', 'Master of Science in Computer Science', 'Ph.D. in Computer Science']
+                },
+                {
+                    id: 'CAP',
+                    departmentName: 'Computer Application',
+                    courses: ['Bachelor of Computer Application', 'Master of Computer Application', 'Ph.D. in Computer Application']
+                },
+                {
+                    id: 'PHYS',
+                    departmentName: 'Physics',
+                    courses: ['Bachelor of Science in Physics', 'Master of Science in Applied Physics']
+                },
+                {
+                    id: 'BUSI',
+                    departmentName: 'Business Administration',
+                    courses: ['Bachelor of Business Administration', 'Master of Business Administration (MBA)', 'Executive MBA']
+                }
+            ];
+
+            for (const dept of dummyDepartments) {
+                await setDoc(doc(db, DEPARTMENT_COLLECTION, dept.id), dept);
+            }
+
+            return { success: true, message: 'Dummy departments created successfully.' };
+        } catch (error) {
+            console.error('Error generating dummy departments:', error);
             return { success: false, message: error.message };
         }
     }

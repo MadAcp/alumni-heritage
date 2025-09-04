@@ -15,6 +15,7 @@ import AdminHeader from './components/admin/AdminHeader';
 import AdminDashboard from './components/admin/AdminDashboard';
 import ManageUsers from './components/admin/ManageUsers';
 import ManageDepartments from './components/admin/ManageDepartments';
+import DepartmentEditor from './components/admin/DepartmentEditor';
 import ManageEvents from './components/admin/ManageEvents';
 import Settings from './components/admin/Settings'
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -108,6 +109,14 @@ function AppRoutes() {
           element={
             <AdminRoute>
               <ManageDepartments />
+            </AdminRoute>
+          }
+        />
+        <Route 
+          path="/admin/department/:id"
+          element={
+            <AdminRoute>
+              <DepartmentEditor />
             </AdminRoute>
           }
         />

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAuth } from '../../context/AuthContext';
 import userService from '../../services/userService';
+import departmentService from '../../services/departmentService';
 
 const EditContainer = styled.div`
   max-width: 1200px;
@@ -432,9 +433,13 @@ const Notification = styled.div`
 `;
 
 function ProfileEdit() {
-  const { currentUser, login } = useAuth();
+  const { currentUser, setCurrentUser } = useAuth();
   const navigate = useNavigate();
   const [editData, setEditData] = useState({});
+  const [departmentId, setDepartmentId] = useState('');
+  const [startYear, setStartYear] = useState('');
+  const [otherDepartment, setOtherDepartment] = useState('');
+  const [departments, setDepartments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState(null);
   const [showAddSkill, setShowAddSkill] = useState(false);
@@ -445,10 +450,24 @@ function ProfileEdit() {
   const [newCertification, setNewCertification] = useState('');
 
   useEffect(() => {
-    if (currentUser?.profile) {
+    if (currentUser) {
       // Deep clone the profile data for editing
-      setEditData(JSON.parse(JSON.stringify(currentUser.profile)));
+      setEditData(currentUser.profile ? JSON.parse(JSON.stringify(currentUser.profile)) : {});
+      setDepartmentId(currentUser.departmentId || '');
+      setStartYear(currentUser.startYear || '');
+      if (currentUser.departmentId === 'OTHER') {
+        setOtherDepartment(currentUser.departmentName || '');
+      }
     }
+
+    const fetchDepartments = async () => {
+      const response = await departmentService.getAllDepartments();
+      if (response.success) {
+        setDepartments(response.data);
+      }
+    };
+
+    fetchDepartments();
   }, [currentUser]);
 
   const handleInputChange = (section, field, value) => {
@@ -565,14 +584,32 @@ function ProfileEdit() {
   const handleSave = async () => {
     setIsLoading(true);
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const result = await userService.updateUserProfile(currentUser.id, editData);
-      
+      const department = departments.find(d => d.id === departmentId);
+      const departmentName = departmentId === 'OTHER' ? otherDepartment : department?.departmentName;
+
+      console.log('editData:', JSON.stringify(editData));
+
+
+      const dataToUpdate = {
+        departmentId,
+        startYear,
+        departmentName,
+        profile: editData,
+      };
+
+      const result = await userService.updateUserProfile(currentUser.id, dataToUpdate);
+      console.log('result:', JSON.stringify(result));
       if (result.success) {
-        // Update the auth context with the new user data
-        login(result.user);
+        // The service doesn't return the user object, so we construct it manually
+        // to update the context state immediately.
+        // const updatedUser = {
+        //   ...currentUser,
+        //   departmentId,
+        //   startYear,
+        //   departmentName,
+        //   profile: editData,
+        // };
+        // setCurrentUser(updatedUser);
         
         setNotification({
           type: 'success',
@@ -781,6 +818,47 @@ function ProfileEdit() {
         <EditSection>
           <h2>Academic Information</h2>
           <FormGrid>
+            <FormGroup>
+              <label className="form-label">Department</label>
+              <select
+                className="form-select"
+                value={departmentId}
+                onChange={(e) => setDepartmentId(e.target.value)}
+              >
+                <option value="" disabled>Select Department</option>
+                {departments.map(dept => (
+                  <option key={dept.id} value={dept.id}>{dept.departmentName}</option>
+                ))}
+                <option value="OTHER">Other</option>
+              </select>
+            </FormGroup>
+
+            {departmentId === 'OTHER' && (
+              <FormGroup>
+                <label className="form-label">Please Specify Department</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={otherDepartment}
+                  onChange={(e) => setOtherDepartment(e.target.value)}
+                  required
+                />
+              </FormGroup>
+            )}
+
+            <FormGroup>
+              <label className="form-label">Start Year</label>
+              <input
+                type="number"
+                className="form-input"
+                value={startYear}
+                onChange={(e) => setStartYear(parseInt(e.target.value) || '')}
+                min="1950"
+                max="2030"
+                placeholder="e.g., 2018"
+              />
+            </FormGroup>
+
             <FormGroup>
               <label className="form-label">Student ID</label>
               <input
